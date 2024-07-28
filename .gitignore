@@ -1,2 +1,6 @@
 # Ignore a pasta node_modules
-node_modules
+**/node_modules
+
+# Ignore pastas relacionadaas ao IstanbulJS 
+**/coverage
+**/.nyc_output
