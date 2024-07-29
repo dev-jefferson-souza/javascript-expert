@@ -4,3 +4,6 @@
 # Ignore pastas relacionadaas ao IstanbulJS 
 **/coverage
 **/.nyc_output
+
+# Ignore as pastas relacionadas ao database
+**/database
