@@ -1,5 +1,6 @@
 const { describe, it, before, beforeEach, afterEach } = require("mocha");
 const CarService = require("../../src/service/carService");
+const Transaction = require("../../src/entities/transaction");
 
 const { join } = require("path");
 const { expect } = require("chai");
@@ -69,8 +70,10 @@ describe("CarService Suite Tests", () => {
     const car = mocks.validCar;
 
     /**
-     * Criando uma instância imutavel de carCategory e garantindo que nosso car
-     * esteja na lista carIds.
+     * Criando uma instância imutavel de carCategory pois como iremos substituir
+     * um valor de mock.validCarCategory não podemos sujar sua instância.
+     *
+     * Também estamos garantindo que o id de car realmente esteja na lista de carIds.
      */
     const carCategory = Object.create(mocks.validCarCategory);
     carCategory.carIds = [car.id];
@@ -86,6 +89,72 @@ describe("CarService Suite Tests", () => {
 
     expect(carService.chooseRandomCar.calledOnce).to.be.ok;
     expect(carService.carRepository.find.calledWithExactly(car.id)).to.be.ok;
+    expect(result).to.be.deep.equal(expected);
+  });
+
+  it("given a carCategory, customer and numberOfDays it should calculate final amount in real", async () => {
+    const customer = Object.create(mocks.validCustomer);
+    customer.age = 50;
+
+    const carCategory = Object.create(mocks.validCarCategory);
+    carCategory.price = 37.6;
+
+    const numberOfDays = 5;
+
+    /**
+     * Estamos mockando o retorno da função de taxesBasedOnAge, para caso ela
+     * seja alterada, não quebrar nosso teste, dessa forma não dependemos de
+     * dados externos.
+     */
+    sandbox
+      .stub(carService, "taxesBasedOnAge")
+      .get(() => [{ from: 40, to: 50, then: 1.3 }]);
+
+    const result = await carService.calculateFinalPrice(
+      customer,
+      carCategory,
+      numberOfDays
+    );
+
+    const expected = carService.currencyFormat.format(244.4);
+    expect(result).to.be.deep.equal(expected);
+  });
+
+  it("given a customer and a car category it should return a transaction receipt", async () => {
+    const car = mocks.validCar;
+    const carCategory = {
+      ...mocks.validCarCategory,
+      price: 37.6,
+      carIds: [car.id],
+    };
+
+    const customer = Object.create(mocks.validCustomer);
+    customer.age = 20;
+
+    const numberOfDays = 5;
+    const dueDate = "10 de novembro de 2020";
+
+    /**
+     * Mockando a data do Javascript, para contornarmos o problema que teriamos
+     * ao lidar com o passar dos dias.
+     */
+    const now = new Date(2020, 10, 5);
+    sandbox.useFakeTimers(now.getTime());
+
+    sandbox
+      .stub(carService.carRepository, carService.carRepository.find.name)
+      .resolves(car);
+
+    const expectedAmount = carService.currencyFormat.format(206.8);
+    const result = await carService.rent(customer, carCategory, numberOfDays);
+
+    const expected = new Transaction({
+      customer,
+      car,
+      dueDate,
+      amount: expectedAmount,
+    });
+
     expect(result).to.be.deep.equal(expected);
   });
 });
