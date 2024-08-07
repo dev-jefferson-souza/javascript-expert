@@ -3,6 +3,7 @@
  */
 import database from "./../database.json" with { type: "json" };
 import Person from "./person.js";
+import { save } from "./repository.js";
 import TerminalController from "./terminalController.js";
 
 
@@ -16,7 +17,6 @@ terminalController.initializeTerminal(database, DEFAULT_LANG);
 async function mainLoop(){
   try{
     const answer = await terminalController.question('What??');
-    console.log('answer:', answer)
 
     if(answer === STOP_TERM){
       terminalController.closeTerminal();
@@ -26,8 +26,10 @@ async function mainLoop(){
     }
 
     const person = Person.generateInstanceFromString(answer);
-    console.log(person.formatted(DEFAULT_LANG));
-
+    terminalController.updateTableItem(person.formatted(DEFAULT_LANG));
+    
+    await save(person);
+    
     return mainLoop();
 
   }catch(error){
