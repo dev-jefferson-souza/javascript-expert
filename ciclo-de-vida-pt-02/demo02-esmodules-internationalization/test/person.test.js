@@ -1,7 +1,7 @@
 import chai from 'chai';
 import mocha from 'mocha';
-const {describe, it} = mocha
-const {expect} = chai;
+const { describe, it} = mocha
+const { expect } = chai;
 
 import Person from './../src/person.js';
 
@@ -19,6 +19,20 @@ describe('Person', () => {
     }
 
     expect(person).to.be.deep.equal(expected);
+  })
+
+  it('should throw an error if the parameters provided are insufficient to build an instance from a string', () => {
+    const insufficientParameters = '1 Bike,Carro 12';
+    const result = () => Person.generateInstanceFromString(insufficientParameters);
+
+    expect(result).to.throws('Insufficient parameters provided. Expected 5, but received 3.')
+  })
+
+  it('should throw an error if too many parameters were provided to build an instance from a string', () => {
+    const tooManyParameters = '1 Bike,Carro 12 2012-05-09 2012-06-09 Petrópolis RJ Brasil';
+    const result = () => Person.generateInstanceFromString(tooManyParameters);
+
+    expect(result).to.throws('Too many parameters provided. Expected 5, but received 8.')
   })
 
   it('should format values using the language provided', () => {
@@ -53,7 +67,6 @@ describe('Person', () => {
     });
 
     const result = person.formatted();
-    console.log(result)
 
     const expected = {
       id: 1,

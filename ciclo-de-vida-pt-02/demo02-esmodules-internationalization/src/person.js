@@ -42,7 +42,19 @@ export default class Person {
 
   static generateInstanceFromString(text){
     const EMPTY_SPACE = ' ';
-    const [id, vehicles, kmTraveled, from, to] = text.split(EMPTY_SPACE);
+    const TOTAL_PARAMS = 5;
+
+    const parametersReceived = text.split(EMPTY_SPACE)
+
+    if (parametersReceived.length < TOTAL_PARAMS) {
+      throw new Error(`Insufficient parameters provided. Expected ${TOTAL_PARAMS}, but received ${parametersReceived.length}.`);
+    }
+
+    if (parametersReceived.length > TOTAL_PARAMS) {
+      throw new Error(`Too many parameters provided. Expected ${TOTAL_PARAMS}, but received ${parametersReceived.length}.`);
+    }
+
+    const [id, vehicles, kmTraveled, from, to] = parametersReceived;
     const person = new Person({
       id,
       kmTraveled,
