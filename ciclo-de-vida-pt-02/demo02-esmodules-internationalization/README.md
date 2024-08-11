@@ -5,7 +5,7 @@
 ****
 
 ### Problemas ao utilizar `Reify` e `NYC` com ES Modules
-Durante o curso foram utilizadas esses dois pacotes, sendo o Reify para transpilar o código para que o NYC conseguisse interpetá-lo, e o NYC para medir a cobertura de código.
+Durante o curso foram utilizados esses dois pacotes, sendo o Reify para transpilar o código para que o NYC conseguisse interpetá-lo, e o NYC para medir a cobertura de código.
 
 Até a última aula desse módulo consegui utilizar essas duas bibliotecas, no entato ao ir mais a fundo e praticar implementando mais testes, me deparei com o seguinte problema, o NYC não suportava o ES Modules, e o Reify aparentemente não estava sendo o suficiente para resolver isso.
 
