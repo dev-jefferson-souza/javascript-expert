@@ -2,7 +2,7 @@ import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-export const save = async (data) => {
+export const save = async (data, databasePath = './../database.json' ) => {
   /**
    * No ESModules não tem __filename, __dirname.
    * 
@@ -14,10 +14,18 @@ export const save = async (data) => {
    */
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
-  const databaseFile = path.join(__dirname, './../database.json');
+  const databaseFile = path.join(__dirname, databasePath);
 
   const currentData = JSON.parse((await readFile(databaseFile)))
   currentData.push(data);
 
   await writeFile(databaseFile, JSON.stringify(currentData));
+}
+
+export const clear =  async (databasePath = './../database.json' ) => {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+  const databaseFile = path.join(__dirname, databasePath);
+
+  await writeFile(databaseFile, JSON.stringify([]));
 }
