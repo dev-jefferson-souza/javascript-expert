@@ -7,3 +7,6 @@
 
 # Ignore as pastas relacionadas ao database
 **/database
+
+#Ignore as pastas relaionadas ao reify, que faz a conversão do código ESModules para JS comum
+**/.reify**

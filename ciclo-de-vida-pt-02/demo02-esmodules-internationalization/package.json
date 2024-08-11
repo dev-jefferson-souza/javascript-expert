@@ -1,0 +1,23 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "npx nodemon --ignore database.json --exec node --experimental-json-modules src/index.js",
+    "test": "npx mocha -w  --parallel test/*test.js",
+    "test:cov": "npx c8 npx mocha --parallel test/*.test.js"
+  },
+  "engines": {
+    "node": "14.3"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "chalk-table": "^1.0.2",
+    "draftlog": "^1.0.13"
+  },
+  "devDependencies": {
+    "c8": "^10.1.2",
+    "chai": "^4.5.0",
+    "mocha": "^8.4.0",
+    "nodemon": "^3.1.4",
+    "sinon": "^9.2.4"
+  }
+}
